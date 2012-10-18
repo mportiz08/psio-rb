@@ -1,6 +1,8 @@
+$:.unshift File.expand_path("../lib", __FILE__)
 require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
+require 'psutil/version'
 
 desc 'Builds the psutil gem.'
 task :build do
@@ -9,7 +11,7 @@ end
 
 desc 'Installs the psutil gem.'
 task :install => :build do
-  sh 'gem install psutil-0.0.1.gem'
+  sh "gem install psutil-#{Psutil::VERSION}.gem"
 end
 
 desc 'Open an irb session preloaded with psutil.'
