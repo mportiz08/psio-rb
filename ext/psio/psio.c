@@ -1,8 +1,10 @@
-#include <ruby.h>
-#include <sys/sysctl.h>
+#include <psio.h>
+
+VALUE mPsio;
 
 void
 Init_psio(void)
 {
-  
+  mPsio = rb_define_module("Psio");
+  Init_psio_cpu();
 }
