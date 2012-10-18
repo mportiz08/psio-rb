@@ -1,15 +1,15 @@
 $:.unshift File.expand_path('../lib', __FILE__)
-require 'psutil/version'
+require 'psio/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'psutil'
-  s.version     = Psutil::VERSION
-  s.summary     = 'ruby bindings for the psutil library'
+  s.name        = 'psio'
+  s.version     = Psio::VERSION
+  s.summary     = 'ruby library for system metrics'
   s.description = s.summary
   s.author      = 'Marcus Ortiz'
   s.email       = 'mportiz08@gmail.com'
-  s.homepage    = 'https://github.com/mportiz08/psutil'
+  s.homepage    = 'https://github.com/mportiz08/psio'
   s.files       = Dir["README.md", "LICENSE.md", "lib/**/*.rb"] +
                   Dir['ext/**/*.{c,h,rb}']
-  s.extensions  = ['ext/psutil/extconf.rb']
+  s.extensions  = ['ext/psio/extconf.rb']
 end

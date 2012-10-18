@@ -2,7 +2,7 @@
 #include <sys/sysctl.h>
 
 void
-Init_psutil(void)
+Init_psio(void)
 {
   
 }

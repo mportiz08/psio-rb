@@ -28,7 +28,7 @@ IS_OSX      = ARCH.include?('darwin')
 #   '/usr/lib',
 # ]
 
-# dir_config('psutil', HEADER_DIRS, LIB_DIRS)
+# dir_config('psio', HEADER_DIRS, LIB_DIRS)
 
 # OSX_FRAMEWORKS = %w(CoreFoundation)
 
@@ -42,4 +42,4 @@ end
 #   end
 # end
 
-create_makefile('psutil/psutil')
+create_makefile('psio/psio')

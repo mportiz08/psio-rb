@@ -2,21 +2,21 @@ $:.unshift File.expand_path('../lib', __FILE__)
 require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
-require 'psutil/version'
+require 'psio/version'
 
-desc 'Builds the psutil gem.'
+desc 'Builds the psio gem.'
 task :build do
-  sh 'gem build psutil.gemspec'
+  sh 'gem build psio.gemspec'
 end
 
-desc 'Installs the psutil gem.'
+desc 'Installs the psio gem.'
 task :install => :build do
-  sh "gem install psutil-#{Psutil::VERSION}.gem"
+  sh "gem install psio-#{Psio::VERSION}.gem"
 end
 
-desc 'Open an irb session preloaded with psutil.'
+desc 'Open an irb session preloaded with psio.'
 task :console => :install do
-  sh 'irb -I lib/ -r psutil'
+  sh 'irb -I lib/ -r psio'
 end
 
 task :default => :console
