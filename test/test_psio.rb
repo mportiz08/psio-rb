@@ -10,4 +10,13 @@ class PsioTest < Test::Unit::TestCase
     
     cpus.each { |cpu| assert_kind_of Psio::Cpu, cpu }
   end
+  
+  def test_processes
+    procs = Psio.processes
+    
+    assert_kind_of Array, procs
+    refute_empty procs
+    
+    procs.each { |p| assert_kind_of Psio::Process, p }
+  end
 end

@@ -7,6 +7,7 @@ Init_psio(void)
 {
   mPsio = rb_define_module("Psio");
   rb_define_singleton_method(mPsio, "cpus", psio_cpus, 0);
+  rb_define_singleton_method(mPsio, "processes", psio_processes, 0);
 }
 
 static VALUE
@@ -33,6 +34,12 @@ psio_cpus(void)
   }
   
   return ret;
+}
+
+static VALUE
+psio_processes(void)
+{
+  return NULL;
 }
 
 static VALUE

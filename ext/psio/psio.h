@@ -19,6 +19,7 @@ extern VALUE mPsio;
 
 void         Init_psio(void);
 static VALUE psio_cpus(void);
+static VALUE psio_processes(void);
 
 static VALUE psio_cpu_new(processor_cpu_load_info_data_t cpu_load_info);
 
