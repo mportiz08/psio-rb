@@ -4,6 +4,7 @@
 #include <ruby.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pwd.h>
 #include <sys/sysctl.h>
 
 #include <mach/mach.h>

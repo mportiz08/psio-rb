@@ -103,11 +103,18 @@ static VALUE
 psio_process_new(kinfo_proc_t *proc_info)
 {
   VALUE cProcess, proc;
+  uid_t uid;
+  char *user;
   
   cProcess = rb_const_get(mPsio, rb_intern("Process"));
   proc     = rb_class_new_instance(0, NULL, cProcess);
   
-  rb_iv_set(proc, "@pid", INT2FIX(((*proc_info).kp_proc).p_pid));
+  rb_iv_set(proc, "@pid", INT2FIX((*proc_info).kp_proc.p_pid));
+  
+  uid  = (*proc_info).kp_eproc.e_pcred.p_ruid;
+  user = user_from_uid(uid, 0);
+  rb_iv_set(proc, "@uid", INT2FIX(uid));
+  rb_iv_set(proc, "@user", rb_str_new_cstr(user));
   
   return proc;
 }
