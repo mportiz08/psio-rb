@@ -13,7 +13,9 @@
 #include <mach/mach_host.h>
 #include <mach/mach_traps.h>
 #include <mach/mach_vm.h>
-#include <mach/shared_memory_server.h>
+#include <mach/shared_region.h>
+
+typedef struct kinfo_proc kinfo_proc_t;
 
 extern VALUE mPsio;
 
@@ -22,5 +24,6 @@ static VALUE psio_cpus(void);
 static VALUE psio_processes(void);
 
 static VALUE psio_cpu_new(processor_cpu_load_info_data_t cpu_load_info);
+static VALUE psio_process_new(kinfo_proc_t *proc);
 
 #endif
