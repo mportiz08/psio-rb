@@ -104,23 +104,35 @@ psio_process_new(kinfo_proc_t *proc_info)
 {
   VALUE cProcess, proc, status;
   uid_t uid;
+  pid_t pid;
   char *user, *name;
+  char exe[PATH_MAX];
   
   cProcess = rb_const_get(mPsio, rb_intern("Process"));
   proc     = rb_class_new_instance(0, NULL, cProcess);
   
-  rb_iv_set(proc, "@pid", INT2FIX((*proc_info).kp_proc.p_pid));
+  // set process.pid
+  pid = (*proc_info).kp_proc.p_pid;
+  rb_iv_set(proc, "@pid", INT2FIX(pid));
   
+  // set process.uid and process.user
   uid  = (*proc_info).kp_eproc.e_pcred.p_ruid;
   user = user_from_uid(uid, 0);
   rb_iv_set(proc, "@uid", INT2FIX(uid));
   rb_iv_set(proc, "@user", rb_str_new_cstr(user));
   
+  // set process.exe
+  if(proc_pidpath(pid, &exe, sizeof(exe)) == 0) {
+    exe[0] = '?';
+    exe[1] = '\0';
+  }
+  rb_iv_set(proc, "@exe", rb_str_new_cstr(exe));
+  
+  // TODO: set process.args
+  
+  // set process.status
   status = psio_status_str_from_code((*proc_info).kp_proc.p_stat);
   rb_iv_set(proc, "@status", status);
-  
-  name = (*proc_info).kp_proc.p_comm;
-  rb_iv_set(proc, "@name", rb_str_new_cstr(name));
   
   return proc;
 }
