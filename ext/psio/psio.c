@@ -102,9 +102,10 @@ psio_cpu_new(processor_cpu_load_info_data_t cpu_load_info)
 static VALUE
 psio_process_new(kinfo_proc_t *proc_info)
 {
-  VALUE cProcess, proc, status;
+  VALUE cProcess, proc, status, memory;
   uid_t uid;
   pid_t pid;
+  float pct_cpu;
   char *user, *name;
   char exe[PATH_MAX];
   
@@ -133,6 +134,14 @@ psio_process_new(kinfo_proc_t *proc_info)
   // set process.status
   status = psio_status_str_from_code((*proc_info).kp_proc.p_stat);
   rb_iv_set(proc, "@status", status);
+  
+  // set process.num_threads
+  pct_cpu = (*proc_info).kp_proc.p_pctcpu;
+  rb_iv_set(proc, "@cpu_usage", rb_float_new(pct_cpu));
+  
+  // set process.memory
+  memory = psio_process_memory_info(pid);
+  rb_iv_set(proc, "@memory", memory);
   
   return proc;
 }
@@ -182,4 +191,44 @@ psio_status_str_from_code(char code)
   }
   
   return ret;
+}
+
+static VALUE
+psio_process_memory_info(pid_t pid)
+{
+  VALUE mem, key;
+  struct proc_taskinfo mem_info;
+  int mib[4];
+  size_t size;
+  uint64_t val;
+  
+  mib[0] = CTL_KERN;
+  mib[1] = KERN_PROC;
+  mib[2] = KERN_PROC_PID;
+  mib[3] = pid;
+  
+  size = sizeof(struct kinfo_proc);
+  
+  if(sysctl((int*)mib, 4, &mem_info, &size, NULL, 0) == -1) {
+    fprintf(stderr, "something bad happened");
+    return Qnil;
+  }
+  if(size == 0) {
+    fprintf(stderr, "something bad happened");
+    return Qnil;
+  }
+  
+  mem = rb_class_new_instance(0, NULL, rb_cHash);
+  
+  // set virtual memory size
+  key = rb_str_new_cstr("virtual");
+  val = mem_info.pti_virtual_size;
+  rb_funcall(mem, rb_intern("store"), 2, key, INT2FIX(val));
+  
+  // set resident memory size
+  key = rb_str_new_cstr("resident");
+  val = mem_info.pti_resident_size;
+  rb_funcall(mem, rb_intern("store"), 2, key, INT2FIX(val));
+  
+  return mem;
 }
