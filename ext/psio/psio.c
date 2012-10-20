@@ -102,9 +102,9 @@ psio_cpu_new(processor_cpu_load_info_data_t cpu_load_info)
 static VALUE
 psio_process_new(kinfo_proc_t *proc_info)
 {
-  VALUE cProcess, proc;
+  VALUE cProcess, proc, status;
   uid_t uid;
-  char *user;
+  char *user, *name;
   
   cProcess = rb_const_get(mPsio, rb_intern("Process"));
   proc     = rb_class_new_instance(0, NULL, cProcess);
@@ -116,5 +116,58 @@ psio_process_new(kinfo_proc_t *proc_info)
   rb_iv_set(proc, "@uid", INT2FIX(uid));
   rb_iv_set(proc, "@user", rb_str_new_cstr(user));
   
+  status = psio_status_str_from_code((*proc_info).kp_proc.p_stat);
+  rb_iv_set(proc, "@status", status);
+  
+  name = (*proc_info).kp_proc.p_comm;
+  rb_iv_set(proc, "@name", rb_str_new_cstr(name));
+  
   return proc;
+}
+
+static VALUE
+psio_status_str_from_code(char code)
+{
+  VALUE ret = rb_str_new_cstr("?");
+  
+  switch((int)code) {
+    case 0:
+      ret = rb_str_new_cstr("running");
+      break;
+    case 1:
+      ret = rb_str_new_cstr("sleeping");
+      break;
+    case 2:
+      ret = rb_str_new_cstr("disk sleep");
+      break;
+    case 3:
+      ret = rb_str_new_cstr("stopped");
+      break;
+    case 4:
+      ret = rb_str_new_cstr("tracing stop");
+      break;
+    case 5:
+      ret = rb_str_new_cstr("zombie");
+      break;
+    case 6:
+      ret = rb_str_new_cstr("dead");
+      break;
+    case 7:
+      ret = rb_str_new_cstr("wake kill");
+      break;
+    case 8:
+      ret = rb_str_new_cstr("waking");
+      break;
+    case 9:
+      ret = rb_str_new_cstr("idle");
+      break;
+    case 10:
+      ret = rb_str_new_cstr("locked");
+      break;
+    case 11:
+      ret = rb_str_new_cstr("waiting");
+      break;
+  }
+  
+  return ret;
 }

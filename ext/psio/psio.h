@@ -26,5 +26,6 @@ static VALUE psio_processes(void);
 
 static VALUE psio_cpu_new(processor_cpu_load_info_data_t cpu_load_info);
 static VALUE psio_process_new(kinfo_proc_t *proc);
+static VALUE psio_status_str_from_code(char code);
 
 #endif
